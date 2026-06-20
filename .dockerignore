@@ -1,0 +1,21 @@
+# Secrets — never bake these into the image
+.env
+.env.*
+!.env.example
+
+# Python / virtualenv
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# VCS & local cruft
+.git/
+.gitignore
+.DS_Store
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore

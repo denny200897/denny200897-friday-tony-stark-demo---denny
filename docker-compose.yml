@@ -5,8 +5,11 @@ services:
     container_name: friday-mcp
     env_file:
       - .env
-    ports:
-      - "8000:8000"
+    # 不對外發布 8000：MCP server 暴露了任意指令執行的工具，且 SSE 預設無驗證。
+    # voice-agent 透過共享 network namespace 以 127.0.0.1 連線，不需要 publish。
+    # 真要從主機連，請改成 "127.0.0.1:8000:8000" 並設 MCP_HOST=0.0.0.0（風險自負）。
+    # ports:
+    #   - "127.0.0.1:8000:8000"
     command: ["uv", "run", "friday"]
     restart: unless-stopped
 
