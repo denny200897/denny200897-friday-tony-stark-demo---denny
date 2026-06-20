@@ -167,6 +167,26 @@ The MCP server will pick it up on next start.
 
 ---
 
+## Security ⚠️
+
+**This project is designed to run locally on your own machine only — do not expose it to a network or deploy it to a public server.**
+
+The MCP server intentionally exposes tools that execute arbitrary code on the host (`run_shell_command`, `run_python`, `run_applescript`). That's by design — it's what lets FRIDAY actually *do things* for you — but it means **anyone who can reach the server can run any command on your machine**.
+
+Safeguards in place:
+
+- **The SSE server binds to `127.0.0.1` by default** (`server.py`), so it is not reachable from other machines. Override with `MCP_HOST` / `MCP_PORT` only if you fully understand the risk.
+- **No authentication.** The server has no auth layer, which is fine for loopback-only use but means you must **never** bind it to `0.0.0.0` or publish its port without putting authentication / a reverse proxy in front of it.
+- **`.dockerignore`** keeps `.env`, `.venv`, and `.git` out of any Docker image you build.
+- The `run_shell_command` blocklist (`friday/tools/mac.py`) only guards against a few obviously catastrophic commands to catch speech-recognition mistakes — it is **not** a security boundary and is easy to bypass.
+
+Things to keep in mind even when running locally:
+
+- **Indirect prompt injection.** FRIDAY reads web pages and news. Malicious content could try to trick the LLM into calling the execution tools on your machine. If this worries you, disable the `run_*` tools in `friday/tools/__init__.py`.
+- **Never commit your `.env`.** It is already in `.gitignore` — keep it that way.
+
+---
+
 ## Acknowledgements
 
 This project is based on and modified from the original
