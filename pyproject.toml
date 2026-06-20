@@ -5,10 +5,14 @@ description = "Friday — A Tony Stark-inspired MCP server"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
+    "ddgs>=9.14.4",
+    "edge-tts>=7.2.8",
     "fastmcp",
     "httpx",
     "livekit-agents[deepgram,groq,openai,sarvam,silero]>=1.5.1",
     "livekit-plugins-google>=1.5.1",
+    "pillow>=12.2.0",
+    "pyobjc-framework-cocoa>=12.2",
     "python-dotenv",
 ]
 

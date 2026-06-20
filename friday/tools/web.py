@@ -114,8 +114,35 @@ def register(mcp):
 
     @mcp.tool()
     async def search_web(query: str) -> str:
-        """Search the web for a given query and return a summary of results."""
-        return f"[stub] Search results for: {query}"
+        """Search the web for up-to-date information and return the top results
+        (title, snippet, link). Use this for ANY current/factual question the user asks —
+        stock or crypto prices, exchange rates, sports scores, definitions, "who/what/when is…",
+        recent events, product info, etc. Free, no API key."""
+        try:
+            from ddgs import DDGS
+        except ImportError:  # 套件舊名
+            from duckduckgo_search import DDGS  # type: ignore
+
+        def _search():
+            with DDGS() as d:
+                return list(d.text(query, max_results=6))
+
+        try:
+            # ddgs 是同步的，丟到執行緒避免卡住事件迴圈
+            results = await asyncio.to_thread(_search)
+        except Exception as e:  # noqa: BLE001
+            return f"Web search failed: {e}"
+
+        if not results:
+            return f"No results found for: {query}"
+
+        lines = [f"Web results for «{query}»:"]
+        for r in results:
+            title = (r.get("title") or "").strip()
+            body = (r.get("body") or "").strip()
+            href = (r.get("href") or r.get("link") or "").strip()
+            lines.append(f"- {title}\n  {body[:300]}\n  {href}")
+        return "\n".join(lines)
 
     @mcp.tool()
     async def fetch_url(url: str) -> str:
@@ -154,3 +181,25 @@ def register(mcp):
             return "Displaying the Finance World Monitor on your primary screen now, sir."
         except Exception as e:
             return f"I'm unable to initialize the finance monitor: {str(e)}"
+
+    @mcp.tool()
+    async def open_weather_monitor(location: str = "") -> str:
+        """
+        Opens an interactive weather forecast panel (Windy.com) in the system's web browser.
+        Use this when the user asks to see the weather, a weather forecast, or a weather dashboard/panel.
+        Optionally pass a location name (e.g. "Taipei") to center the map on it.
+        """
+        import webbrowser
+        import urllib.parse
+
+        if location.strip():
+            url = "https://www.windy.com/?" + urllib.parse.quote(location.strip())
+        else:
+            url = "https://www.windy.com/"
+
+        try:
+            webbrowser.open(url)
+            where = f" for {location.strip()}" if location.strip() else ""
+            return f"Displaying the weather forecast panel{where} on your primary screen now, sir."
+        except Exception as e:
+            return f"I'm unable to initialize the weather panel: {str(e)}"

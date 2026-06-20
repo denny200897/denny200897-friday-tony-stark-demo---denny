@@ -2,6 +2,11 @@
 
 > *"Fully Responsive Intelligent Digital Assistant for You"*
 
+> **Attribution:** This project is a fork/modification of the original
+> [friday-tony-stark-demo](https://github.com/SAGAR-TAMANG/friday-tony-stark-demo)
+> by [SAGAR TAMANG](https://github.com/SAGAR-TAMANG). All credit for the original
+> work goes to the original author. See [Acknowledgements](#acknowledgements).
+
 A Tony Stark-inspired AI assistant split into two cooperating pieces:
 
 | Component | What it is |
@@ -159,6 +164,15 @@ The MCP server will pick it up on next start.
 - **Google Gemini 2.5 Flash** — LLM
 - **OpenAI TTS** (`nova` voice) — TTS
 - **[uv](https://github.com/astral-sh/uv)** — fast Python package manager
+
+---
+
+## Acknowledgements
+
+This project is based on and modified from the original
+[**friday-tony-stark-demo**](https://github.com/SAGAR-TAMANG/friday-tony-stark-demo)
+created by [**SAGAR TAMANG**](https://github.com/SAGAR-TAMANG). Huge thanks to the
+original author for the foundation this builds upon.
 
 ---
 

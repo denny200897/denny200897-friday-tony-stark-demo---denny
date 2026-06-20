@@ -1,0 +1,23 @@
+services:
+  mcp-server:
+    platform: linux/amd64
+    build: .
+    container_name: friday-mcp
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    command: ["uv", "run", "friday"]
+    restart: unless-stopped
+
+  voice-agent:
+    platform: linux/amd64
+    build: .
+    container_name: friday-voice
+    env_file:
+      - .env
+    network_mode: "service:mcp-server"
+    depends_on:
+      - mcp-server
+    command: ["uv", "run", "friday_voice", "dev"]
+    restart: unless-stopped
